@@ -1,0 +1,28 @@
+-- DATABASE
+create database sisima;
+
+-- TRIGGER FOR updated_at
+create or replace function update_updated_at()
+returns trigger as $$
+begin
+    new.updated_at = now();
+    return new;
+end;
+$$ language plpgsql;
+
+-- TABEL AKUN
+create type enum_akun_role as enum ('root', 'admin', 'guru', 'walimurid');
+create table akun (
+    id serial primary key,
+    public_id char(26) not null unique,
+    email varchar(255) not null,
+    password varchar(255) not null,
+    role enum_akun_role,
+    created_at timestamp not null default now(),
+    updated_at timestamp not null default now(),
+    deleted_at timestamp
+);
+create trigger trg_akun_updated_at
+before update on akun
+for each row
+execute function update_updated_at();
