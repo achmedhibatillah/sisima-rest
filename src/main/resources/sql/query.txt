@@ -1,16 +1,7 @@
 -- DATABASE
-create database sisima;
+-- create database sisima;
 
--- TRIGGER FOR updated_at
-create or replace function update_updated_at()
-returns trigger as $$
-begin
-    new.updated_at = now();
-    return new;
-end;
-$$ language plpgsql;
-
--- TABEL AKUN
+-- TABLE: AKUN
 create type enum_akun_role as enum ('root', 'admin', 'guru', 'walimurid');
 create table akun (
     id serial primary key,
@@ -22,7 +13,41 @@ create table akun (
     updated_at timestamp not null default now(),
     deleted_at timestamp
 );
-create trigger trg_akun_updated_at
-before update on akun
-for each row
-execute function update_updated_at();
+
+-- TABLE: FILE
+-- security only can: PUBL, AUTH, ADMN, OWNR
+create type enum_file_type as enum ('photo', 'sound', 'video', 'pdf', 'spreadsheet', 'docx', 'other');
+create table file (
+    id serial primary key,
+    public_id char(26) not null unique,
+    type enum_file_type,
+    security char(4) default 'ADMN',
+    path varchar(255)
+);
+
+-- TABLE: GURU
+create type enum_jenis_kelamin as enum ('Laki-laki', 'Perempuan');
+create table guru (
+    id serial primary key,
+    public_id char(26) not null unique,
+    nik bigint unique,
+    nip bigint unique,
+    npwp bigint unique,
+    nama varchar(255),
+    gelar_depan varchar(20),
+    gelar_belakang varchar(20),
+    jenis_kelamin enum_jenis_kelamin default 'Laki-laki',
+    tempat_lahir varchar(30),
+    tanggal_lahir date,
+    alamat varchar(255),
+    masuk date,
+    foto int,
+    file_ktp int,
+    file_npwp int,
+    akun_id int not null,
+
+    foreign key (foto) references file(id) on delete set null,
+    foreign key (file_ktp) references file(id) on delete set null,
+    foreign key (file_npwp) references file(id) on delete set null,
+    foreign key (akun_id) references akun(id)
+);
