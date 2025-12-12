@@ -1,8 +1,8 @@
 package com.sisima.api.enums;
 
 public enum AkunRoleEnum {
-    root,
-    admin,
-    guru,
-    walimurid
+    ROOT,
+    ADMIN,
+    GURU,
+    WALIMURID
 }
