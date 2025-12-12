@@ -1,7 +1,8 @@
-package com.sisima.api.model;
+package com.sisima.api.domain.akun.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class AkunPostRequest {
     private String password;
 
     @NotBlank
+    @Pattern(regexp = "root|admin|guru|siswa", message = "invalid role")
     private String role; 
 
 }

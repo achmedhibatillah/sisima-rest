@@ -1,11 +1,9 @@
-package com.sisima.api.repository;
+package com.sisima.api.domain.akun;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import com.sisima.api.entity.Akun;
 
 @Repository
 public interface AkunRepository extends JpaRepository<Akun, Long> {

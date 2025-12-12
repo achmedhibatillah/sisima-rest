@@ -1,4 +1,4 @@
-package com.sisima.api.service;
+package com.sisima.api.domain.akun;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -6,11 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.github.f4b6a3.ulid.UlidCreator;
-import com.sisima.api.entity.Akun;
+import com.sisima.api.domain.akun.model.AkunGetResponse;
+import com.sisima.api.domain.akun.model.AkunPostRequest;
 import com.sisima.api.enums.AkunRoleEnum;
-import com.sisima.api.model.AkunPostRequest;
-import com.sisima.api.model.AkunGetResponse;
-import com.sisima.api.repository.AkunRepository;
 
 import lombok.AllArgsConstructor;
 
@@ -66,11 +64,7 @@ public class AkunService {
     }
 
     private AkunRoleEnum parseRole(String role) {
-        try {
-            return AkunRoleEnum.valueOf(role.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid role");
-        }
+        return AkunRoleEnum.valueOf(role.toUpperCase());
     }
     
 }

@@ -1,4 +1,4 @@
-package com.sisima.api.controller;
+package com.sisima.api.domain.home;
 
 import org.springframework.web.bind.annotation.RestController;
 

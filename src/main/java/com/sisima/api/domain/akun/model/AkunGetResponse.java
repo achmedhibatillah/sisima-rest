@@ -1,12 +1,10 @@
-package com.sisima.api.model;
+package com.sisima.api.domain.akun.model;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sisima.api.enums.AkunRoleEnum;
 
 import lombok.*;
 

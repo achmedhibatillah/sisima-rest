@@ -1,4 +1,4 @@
-package com.sisima.api.entity;
+package com.sisima.api.domain.akun;
 
 import java.time.LocalDateTime;
 
