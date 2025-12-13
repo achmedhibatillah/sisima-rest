@@ -3,6 +3,7 @@ package com.sisima.api.domain.auth;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sisima.api.config.JwtUtil;
 import com.sisima.api.domain.akun.Akun;
 import com.sisima.api.domain.akun.AkunRepository;
 import com.sisima.api.domain.auth.model.AuthRequest;
@@ -16,6 +17,7 @@ public class AuthService {
 
     private final AkunRepository akunRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     public AuthResponse authentication(AuthRequest request) {
         String email = request.getEmail();
@@ -23,15 +25,16 @@ public class AuthService {
 
         Akun akun = akunRepository.findDetailByEmail(email).orElse(null);
         if (akun == null) {
-            return new AuthResponse("invalid");
+            return new AuthResponse("invalid", null);
         }
 
         boolean isPasswordMatch = passwordEncoder.matches(password, akun.getPassword());
         if (!isPasswordMatch) {
-            return new AuthResponse("invalid");
+            return new AuthResponse("invalid", null);
         }
 
-        return new AuthResponse("success");
+        String token = jwtUtil.generateToken(akun);
+        return new AuthResponse("success", token);
     }
     
 }

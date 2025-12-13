@@ -6,9 +6,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.sisima.api.filter.JwtAuthenticationFilter;
+
+import lombok.AllArgsConstructor;
 
 @Configuration
+@AllArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -18,8 +26,8 @@ public class SecurityConfig {
             
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/akun/**").permitAll()
+                .requestMatchers("/login").permitAll()
+                // .requestMatchers("/akun/**").permitAll()
                 .anyRequest().authenticated()
             )
 
@@ -28,6 +36,8 @@ public class SecurityConfig {
                     org.springframework.security.config.http.SessionCreationPolicy.STATELESS
                 )
             )
+
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
             .httpBasic(httpBasic -> httpBasic.disable());
 
