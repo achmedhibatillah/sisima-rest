@@ -22,12 +22,22 @@ public class JwtUtil {
 
     public String generateToken(Akun akun) {
         return Jwts.builder()
-                .setSubject(akun.getPublicId())
-                .claim("role", akun.getRole().name())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
-                .compact();
+            .setSubject(akun.getPublicId())
+            .claim("email", akun.getEmail())
+            .claim("role", akun.getRole().name())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+            .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    public String extractEmail(String token) {
+        return (String) Jwts.parserBuilder()
+            .setSigningKey(SECRET_KEY)
+            .build()
+            .parseClaimsJws(token)
+            .getBody()
+            .get("email");
     }
 
     public String extractPublicId(String token) {

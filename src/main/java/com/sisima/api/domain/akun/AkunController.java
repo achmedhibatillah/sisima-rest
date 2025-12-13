@@ -44,11 +44,8 @@ public class AkunController {
     }
 
     @GetMapping("/{publicId}")
+    @PreAuthorize("@access.ownerOrRole(authentication, #publicId, 'ROOT', 'ADMIN')")
     public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {
-        if (!accessControlService.ownerCanAccess(auth, publicId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-
         try {
             AkunGetResponse response = akunService.getDetailAkunByPublicId(publicId);
             return ResponseEntity.ok(response);
