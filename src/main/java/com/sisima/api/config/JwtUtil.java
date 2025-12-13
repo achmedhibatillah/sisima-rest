@@ -18,7 +18,7 @@ public class JwtUtil {
         "mysecret123456789012345678901234567890".getBytes()
     );
 
-    private final long EXPIRATION_MS = 1000 * 60 * 60; // 1 jam
+    private final long EXPIRATION_MS = 1000 * 60 * 60;
 
     public String generateToken(Akun akun) {
         return Jwts.builder()
