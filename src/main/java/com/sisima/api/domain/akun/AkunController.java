@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
 import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
+import com.sisima.api.security.AccessControlService;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
 
 import jakarta.validation.Valid;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,19 +32,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AkunController {
 
     private final AkunService akunService;
+    private final AccessControlService accessControlService;
 
     @GetMapping
-    public ResponseEntity<?> getAllAkun() {
+    @PreAuthorize("hasRole('ROOT')")
+    public ResponseEntity<?> getAllAkun(Authentication auth) {
         List<AkunGetResponse> response = akunService.getAllAkun();
-        if (response.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
+        if (response.isEmpty()) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/{publicId}")
-    public ResponseEntity<?> getDetailAkun(@PathVariable String publicId) {
+    public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {
+        if (!accessControlService.ownerCanAccess(auth, publicId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         try {
             AkunGetResponse response = akunService.getDetailAkunByPublicId(publicId);
             return ResponseEntity.ok(response);

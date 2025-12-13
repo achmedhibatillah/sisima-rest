@@ -2,6 +2,7 @@ package com.sisima.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import com.sisima.api.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 
 @Configuration
+@EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
 
@@ -27,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/login").permitAll()
-                // .requestMatchers("/akun/**").permitAll()
+                .requestMatchers("/akun").hasAuthority("ROLE_ROOT")
                 .anyRequest().authenticated()
             )
 

@@ -21,7 +21,7 @@ public class AkunAddRequest {
     private String password;
 
     @NotBlank
-    @Pattern(regexp = "root|admin|guru|siswa", message = "invalid role")
+    @Pattern(regexp = "root|admin|guru|walimurid", message = "invalid role")
     private String role; 
 
 }
