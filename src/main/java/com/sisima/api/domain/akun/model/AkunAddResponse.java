@@ -1,13 +1,15 @@
-package com.sisima.api.domain.auth.model;
+package com.sisima.api.domain.akun.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AuthResponse {
+@NoArgsConstructor
+public class AkunAddResponse {
 
     private String status;
     

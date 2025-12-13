@@ -3,8 +3,10 @@ package com.sisima.api.domain.akun;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
-import com.sisima.api.domain.akun.model.AkunPostRequest;
+import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
+import com.sisima.api.domain.akun.model.AkunAddRequest;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -13,7 +15,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,10 +54,42 @@ public class AkunController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addAkun(@RequestBody @Valid AkunPostRequest request) {
-        AkunGetResponse createdAkun = akunService.createAkun(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAkun);
+    public ResponseEntity<?> addAkun(@RequestBody @Valid AkunAddRequest request) {
+        AkunAddResponse response = akunService.createAkun(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PatchMapping("/{publicId}/password")
+    public ResponseEntity<?> updatePassword(
+        @PathVariable String publicId,
+        @RequestBody AkunUpdatePasswordRequest request
+    ) {
+        try {
+            boolean updated = akunService.updatePassword(publicId, request.getNewPassword());
+            if (updated) {
+                return ResponseEntity.ok(null);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
     
+    @DeleteMapping("/{publicId}")
+    public ResponseEntity<?> deleteAkun(@PathVariable String publicId) {
+
+        boolean status = akunService.deleteAkunByPublicId(publicId);
+        try {
+            if (status) {
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
+    }
     
 }

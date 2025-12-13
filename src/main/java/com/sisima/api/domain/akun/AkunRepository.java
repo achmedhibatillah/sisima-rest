@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface AkunRepository extends JpaRepository<Akun, Long> {
 
     Optional<Akun> findDetailByPublicId(String publicId);
+
+    Optional<Akun> findDetailByEmail(String email);
     
 }

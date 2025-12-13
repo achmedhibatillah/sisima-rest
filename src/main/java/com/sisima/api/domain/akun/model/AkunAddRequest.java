@@ -10,9 +10,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AkunPostRequest {
+public class AkunAddRequest {
 
-    @NotBlank(message = "EMAIL INVALID")
+    @NotBlank
     @Email
     private String email;
 

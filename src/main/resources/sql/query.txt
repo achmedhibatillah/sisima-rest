@@ -114,3 +114,10 @@ create table ortu (
     foreign key (ktp_ibu) references file(id) on delete set null,
     foreign key (identitas_id) references identitas(id) on delete set null
 );
+
+-- TABLE: 
+create table xx (
+    id serial primary key,
+    public_id char(26) unique not null,
+    
+);
