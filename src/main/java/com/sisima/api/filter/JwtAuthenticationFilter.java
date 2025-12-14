@@ -19,11 +19,17 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Component
 @AllArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+
+    private static final Logger log =
+        LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     @Override
     protected void doFilterInternal(
@@ -39,6 +45,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (jwtUtil.validateToken(token)) {
                 String publicId = jwtUtil.extractPublicId(token);
                 String role = jwtUtil.extractRole(token);
+
+                    log.info(
+                        "[AUTH] Request {} {} | user={} | role={}",
+                        request.getMethod(),
+                        request.getRequestURI(),
+                        publicId,
+                        role
+                    );
 
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));

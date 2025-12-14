@@ -6,19 +6,52 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.sisima.api.filter.JwtAuthenticationFilter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class AccessControlService {
+
+    private static final Logger log =
+        LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
+    // public boolean rolesCanAccess(Authentication auth, String[] allowedRoles) {
+    //     if (auth == null || !auth.isAuthenticated()) return false;
+
+    //     String currentRole = 
+    //         auth
+    //             .getAuthorities()
+    //             .stream()
+    //             .map(GrantedAuthority::getAuthority)
+    //             .findFirst()
+    //             .orElse("");
+
+    //     return 
+    //         Arrays
+    //             .stream(allowedRoles)
+    //             .anyMatch(r -> currentRole.equals("ROLE_" + r.toUpperCase()));
+    // }
 
     public boolean rolesCanAccess(Authentication auth, String[] allowedRoles) {
         if (auth == null || !auth.isAuthenticated()) return false;
 
-        String currentRole = auth.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElse("");
+        log.info(
+            "[DEBUG] user={} authorities={} allowed={}",
+            auth.getName(),
+            auth.getAuthorities(),
+            Arrays.toString(allowedRoles)
+        );
 
-        return Arrays.stream(allowedRoles)
-                .anyMatch(r -> currentRole.equals("ROLE_" + r.toUpperCase()));
+        return auth.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .anyMatch(userRole ->
+                Arrays.stream(allowedRoles)
+                    .anyMatch(allowed ->
+                        userRole.equals("ROLE_" + allowed.toUpperCase())
+                    )
+            );
     }
 
     public boolean ownerCanAccess(Authentication auth, String resourceOwnerPublicId) {

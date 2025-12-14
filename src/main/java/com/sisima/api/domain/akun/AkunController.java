@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +34,12 @@ public class AkunController {
     private final AccessControlService accessControlService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROOT')")
     public ResponseEntity<?> getAllAkun(Authentication auth) {
+        boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "GURU"});
+        if (!ra) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         List<AkunGetResponse> response = akunService.getAllAkun();
         if (response.isEmpty()) return ResponseEntity.noContent().build();
 

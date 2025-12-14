@@ -29,7 +29,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/akun").hasAuthority("ROLE_ROOT")
                 .anyRequest().authenticated()
             )
 

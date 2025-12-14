@@ -1,7 +1,9 @@
 package com.sisima.api.domain.akun.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,6 +15,9 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 public class AkunGetResponse {
+
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter TIME_FORMAT = DateTimeFormatter.ofPattern("HH:mm");
 
     @JsonProperty("id")
     private String publicId; 
