@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
 import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
-import com.sisima.api.security.AccessControlService;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
 
 import jakarta.validation.Valid;
@@ -17,7 +16,6 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,11 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AkunController {
 
     private final AkunService akunService;
-    private final AccessControlService accessControlService;
 
     @GetMapping
-    @PreAuthorize("hasRole('ROOT')")
-    public ResponseEntity<?> getAllAkun(Authentication auth) {
+    @PreAuthorize("hasAnyRole('ROOT', 'ADMIN')")
+    public ResponseEntity<?> getAllAkun() {
         List<AkunGetResponse> response = akunService.getAllAkun();
         if (response.isEmpty()) return ResponseEntity.noContent().build();
 
@@ -44,8 +41,8 @@ public class AkunController {
     }
 
     @GetMapping("/{publicId}")
-    @PreAuthorize("@access.ownerOrRole(authentication, #publicId, 'ROOT', 'ADMIN')")
-    public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {
+    @PreAuthorize("@access.ownerOrRole(authentication, #publicId)")
+    public ResponseEntity<?> getDetailAkun(@PathVariable String publicId) {
         try {
             AkunGetResponse response = akunService.getDetailAkunByPublicId(publicId);
             return ResponseEntity.ok(response);
@@ -58,6 +55,7 @@ public class AkunController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROOT', 'ADMIN')")
     public ResponseEntity<?> addAkun(@RequestBody @Valid AkunAddRequest request) {
         AkunAddResponse response = akunService.createAkun(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);

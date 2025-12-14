@@ -34,7 +34,6 @@ public class AccessControlService {
         String resourceOwnerPublicId,
         String... roles
     ) {
-        return isOwner(auth, resourceOwnerPublicId)
-            || hasAnyRole(auth, roles);
+        return isOwner(auth, resourceOwnerPublicId) || hasAnyRole(auth, roles);
     }
 }

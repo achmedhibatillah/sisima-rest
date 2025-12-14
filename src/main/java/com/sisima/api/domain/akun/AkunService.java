@@ -31,7 +31,8 @@ public class AkunService {
                     a.getPublicId(),
                     a.getEmail(),
                     a.getRole().name().toLowerCase(),
-                    a.getCreatedAt()
+                    a.getCreatedAt(),
+                    a.getUpdatedAt()
                 )
             ).collect(Collectors.toList());
     }
@@ -44,7 +45,8 @@ public class AkunService {
                 akun.getPublicId(),
                 akun.getEmail(),
                 akun.getRole().name().toLowerCase(),
-                akun.getCreatedAt()
+                akun.getCreatedAt(),
+                akun.getUpdatedAt()
             );
     }
 

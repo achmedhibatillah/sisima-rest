@@ -3,14 +3,14 @@
 
 -- TABLE: AKUN
 -- role:
--- 1 = root
--- 2 = admin
--- 3 = guru
--- 4 = siswa / walimurid
+-- 0 = root
+-- 1 = admin
+-- 2 = guru
+-- 3 = siswa / walimurid
 create table akun (
     id serial primary key,
-    public_id char(26) not null unique,
-    email varchar(255) not null,
+    public_id char(26) unique not null,
+    email varchar(255) unique not null,
     password varchar(255) not null,
     role int,
     created_at timestamp not null default now(),
@@ -19,18 +19,17 @@ create table akun (
 );
 
 -- TABLE: FILE
--- security only can: PUBL, AUTH, ADMN, OWNR
-create type enum_file_type as enum ('photo', 'sound', 'video', 'pdf', 'spreadsheet', 'docx', 'other');
+-- file 'pht', 'snd', 'vdo', 'pdf', 'spd', 'dox', 'oth'
+-- security ort, oad, ous, sau, pub
 create table file (
     id serial primary key,
     public_id char(26) not null unique,
-    type enum_file_type,
-    security char(4) default 'ADMN',
+    type char(3),
+    security char(3),
     path varchar(255)
 );
 
 -- TABLE: GURU
-create type enum_jenis_kelamin as enum ('Laki-laki', 'Perempuan');
 create table guru (
     id serial primary key,
     public_id char(26) not null unique,
@@ -40,7 +39,7 @@ create table guru (
     nama varchar(255),
     gelar_depan varchar(20),
     gelar_belakang varchar(20),
-    jenis_kelamin enum_jenis_kelamin default 'Laki-laki',
+    jenis_kelamin int,
     tempat_lahir varchar(30),
     tanggal_lahir date,
     alamat varchar(255),
@@ -66,17 +65,16 @@ create table psb (
 );
 
 -- TABLE: IDENTITAS
-create type enum_identitas_status_psb as enum ('Lulus', 'Tidak Lulus');
 create table identitas (
     id serial primary key,
     public_id char(26) unique not null,
     nama varchar(255),
     panggilan varchar(30),
-    jenis_kelamin enum_jenis_kelamin,
+    jenis_kelamin int,
     tempat_lahir varchar(30),
     tanggal_lahir date,
     alamat varchar(255),
-    status_psb enum_identitas_status_psb,
+    status_psb int,
     foto int,
     psb_id int not null,
     akun_id int not null,
