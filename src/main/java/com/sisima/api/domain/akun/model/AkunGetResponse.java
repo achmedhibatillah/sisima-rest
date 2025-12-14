@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.*;
@@ -20,16 +21,25 @@ public class AkunGetResponse {
 
     private String role;
 
+    @JsonIgnore
     private LocalDateTime createdAt;
 
-    public Map<String, Object> getTimestamp() {
-        Map<String, Object> createdAtMap = new HashMap<>();
-        createdAtMap.put("day", createdAt.getDayOfWeek().toString());
-        createdAtMap.put("date", createdAt.toLocalDate().toString());
-        createdAtMap.put("time", createdAt.toLocalTime().toString());
+    @JsonIgnore
+    private LocalDateTime updatedAt;
 
-        Map<String, Object> timestamp = new HashMap<>();
+    @JsonProperty("timestamp")
+    public Map<String, Object> getTimestamp() {
+        Map<String, Object> createdAtMap = new LinkedHashMap<>();
+        createdAtMap.put("date", createdAt.format(DATE_FORMAT));
+        createdAtMap.put("time", createdAt.format(TIME_FORMAT));
+
+        Map<String, Object> updatedAtMap = new LinkedHashMap<>();
+        updatedAtMap.put("date", updatedAt.format(DATE_FORMAT));
+        updatedAtMap.put("time", updatedAt.format(TIME_FORMAT));
+
+        Map<String, Object> timestamp = new LinkedHashMap<>();
         timestamp.put("created_at", createdAtMap);
+        timestamp.put("updated_at", updatedAtMap);
         return timestamp;
     }
     
