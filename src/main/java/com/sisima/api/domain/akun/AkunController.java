@@ -45,7 +45,9 @@ public class AkunController {
 
     @GetMapping("/{publicId}")
     public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {
-        if (!accessControlService.ownerCanAccess(auth, publicId)) {
+        boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT"});
+        boolean oa = accessControlService.ownerCanAccess(auth, publicId);
+        if (!ra && !oa) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
