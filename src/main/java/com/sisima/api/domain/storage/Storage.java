@@ -1,4 +1,4 @@
-package com.sisima.api.domain.file;
+package com.sisima.api.domain.storage;
 
 import com.sisima.api.enums.FileTypeEnum;
 
@@ -18,8 +18,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "file")
-public class File {
+@Table(name = "storage")
+public class Storage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

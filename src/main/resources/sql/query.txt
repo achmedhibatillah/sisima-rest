@@ -18,10 +18,10 @@ create table akun (
     deleted_at timestamp
 );
 
--- TABLE: FILE
+-- TABLE: STORAGE
 -- security only can: PUBL, AUTH, ADMN, OWNR
 -- create type enum_file_type as enum ('photo', 'sound', 'video', 'pdf', 'spreadsheet', 'docx', 'other');
-create table file (
+create table storage (
     id serial primary key,
     public_id char(26) not null unique,
     title varchar(50),
@@ -44,7 +44,7 @@ create table guru (
     nama varchar(255),
     gelar_depan varchar(20),
     gelar_belakang varchar(20),
-    jenis_kelamin smallint,
+    jenis_kelamin boolean,
     tempat_lahir varchar(30),
     tanggal_lahir date,
     alamat varchar(255),
@@ -54,9 +54,9 @@ create table guru (
     file_npwp int,
     akun_id int not null,
 
-    foreign key (foto) references file(id) on delete set null,
-    foreign key (file_ktp) references file(id) on delete set null,
-    foreign key (file_npwp) references file(id) on delete set null,
+    foreign key (foto) references storage(id) on delete set null,
+    foreign key (file_ktp) references storage(id) on delete set null,
+    foreign key (file_npwp) references storage(id) on delete set null,
     foreign key (akun_id) references akun(id) on delete cascade
 );
 

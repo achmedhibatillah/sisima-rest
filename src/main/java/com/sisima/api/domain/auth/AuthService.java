@@ -33,7 +33,6 @@ public class AuthService {
             return new AuthResponse("invalid");
         }
 
-        String token = jwtUtil.generateToken(akun);
         return new AuthResponse("success");
     }
 

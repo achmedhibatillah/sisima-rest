@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/akun").permitAll()
+                .requestMatchers("/storage/public/**").permitAll()
                 .anyRequest().authenticated()
             )
 

@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sisima.api.domain.auth.model.AuthRequest;
 import com.sisima.api.domain.auth.model.AuthResponse;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -27,12 +26,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // @PostMapping    
-    // public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
-    //     AuthResponse response = authService.authentication(request);
-    //     return ResponseEntity.ok(response);
-    // }
-
     @PostMapping
     public ResponseEntity<AuthResponse> login(
             @RequestBody @Valid AuthRequest request
@@ -40,12 +33,15 @@ public class AuthController {
         String token = authService.authenticateAndGetToken(request);
 
         if (token == null) {
-            return ResponseEntity
+            return 
+                ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new AuthResponse("invalid"));
         }
 
-        ResponseCookie cookie = ResponseCookie.from("access_token", token)
+        ResponseCookie cookie = 
+            ResponseCookie
+                .from("access_token", token)
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Lax")
@@ -53,7 +49,9 @@ public class AuthController {
                 .maxAge(Duration.ofHours(1))
                 .build();
 
-        return ResponseEntity.ok()
+        return 
+            ResponseEntity
+                .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(new AuthResponse("success"));
     }
