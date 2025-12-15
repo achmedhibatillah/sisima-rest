@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import com.sisima.api.domain.akun.model.AkunAddResponse;
-import com.sisima.api.domain.akun.model.AkunGetResponse; 
+import com.sisima.api.domain.akun.model.AkunGetResponse;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
 import com.sisima.api.enums.AkunRoleEnum;
 
@@ -37,6 +40,11 @@ public class AkunService {
             ).collect(Collectors.toList());
     }
 
+    // public List<AkunGetResponse> getAllGuru(int page, int size) {
+    //     Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
+    //     List<Akun> akunList = akunRepository.findAllGuru(AkunRoleEnum.GURU, pageable);
+    // }
+
     public AkunGetResponse getDetailAkunByPublicId(String publicId) {
         Akun akun = akunRepository.findDetailByPublicId(publicId)
             .orElseThrow(() -> new RuntimeException("404"));
@@ -52,6 +60,10 @@ public class AkunService {
 
     public AkunAddResponse createAkun(AkunAddRequest request) {
         Akun akun = new Akun();
+
+        if (akunRepository.findDetailByEmail(request.getEmail()).isPresent()) {
+            return new AkunAddResponse("isset");
+        }
 
         String publicId = UlidCreator.getUlid().toString();
         akun.setPublicId(publicId);

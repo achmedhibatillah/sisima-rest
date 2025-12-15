@@ -10,6 +10,5 @@ import lombok.Setter;
 public class AuthResponse {
 
     private String status;
-    private String token;
     
 }

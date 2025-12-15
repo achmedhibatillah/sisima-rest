@@ -1,6 +1,7 @@
 package com.sisima.api.domain.akun;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sisima.api.domain.akun.model.AkunAddResponse;
@@ -45,6 +46,16 @@ public class AkunController {
 
         return ResponseEntity.ok(response);
     }
+
+    // @GetMapping("/{role}")
+    // public ResponseEntity<?> getPaginatedAkun(
+    //     @PathVariable String role,
+    //     @RequestParam int perpage,
+    //     @RequestParam int page,
+    //     Authentication auth
+    // ) {
+        
+    // }
 
     @GetMapping("/{publicId}")
     public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {

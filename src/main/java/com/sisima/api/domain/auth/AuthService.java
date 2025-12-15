@@ -25,16 +25,28 @@ public class AuthService {
 
         Akun akun = akunRepository.findDetailByEmail(email).orElse(null);
         if (akun == null) {
-            return new AuthResponse("invalid", null);
+            return new AuthResponse("invalid");
         }
 
         boolean isPasswordMatch = passwordEncoder.matches(password, akun.getPassword());
         if (!isPasswordMatch) {
-            return new AuthResponse("invalid", null);
+            return new AuthResponse("invalid");
         }
 
         String token = jwtUtil.generateToken(akun);
-        return new AuthResponse("success", token);
+        return new AuthResponse("success");
+    }
+
+    public String authenticateAndGetToken(AuthRequest request) {
+        Akun akun = akunRepository.findDetailByEmail(request.getEmail())
+                .orElse(null);
+
+        if (akun == null) return null;
+
+        if (!passwordEncoder.matches(request.getPassword(), akun.getPassword()))
+            return null;
+
+        return jwtUtil.generateToken(akun);
     }
     
 }
