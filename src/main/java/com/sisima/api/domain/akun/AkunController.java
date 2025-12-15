@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
+import com.sisima.api.domain.akun.model.AkunUpdatePasswordByOwnerRequest;
+import com.sisima.api.domain.akun.model.AkunUpdatePasswordByOwnerResponse;
 import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
 import com.sisima.api.security.AccessControlService;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
@@ -96,6 +98,34 @@ public class AkunController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<?> updatePasswordByOwner(
+        Authentication auth,
+        @RequestBody @Valid AkunUpdatePasswordByOwnerRequest request
+    ) {
+        boolean canAccess = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"}) 
+            || accessControlService.ownerCanAccess(auth, request.getPublicId());
+        if (!canAccess) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        if (request.getOldPassword().equals(request.getNewPassword())) {
+            return ResponseEntity.status(400).body("Password lama dan baru tidak boleh sama.");
+        }
+
+        try {
+            akunService.updatePasswordByOwner(request);
+            return ResponseEntity.status(204).build();
+        } catch (Exception e) {
+            if (e.getMessage().equals("404")) {
+                return ResponseEntity.status(404).body("Akun tidak ditemukan.");
+            } else if (e.getMessage().equals("400")) {
+                return ResponseEntity.status(400).body("Password lama salah.");
+            }
+            return ResponseEntity.status(500).build();
         }
     }
     
