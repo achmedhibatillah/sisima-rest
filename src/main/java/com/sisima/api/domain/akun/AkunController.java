@@ -1,13 +1,10 @@
 package com.sisima.api.domain.akun;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
-import com.sisima.api.domain.akun.model.AkunUpdatePasswordByOwnerRequest;
-import com.sisima.api.domain.akun.model.AkunUpdatePasswordByOwnerResponse;
 import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
 import com.sisima.api.security.AccessControlService;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
@@ -49,16 +46,6 @@ public class AkunController {
         return ResponseEntity.ok(response);
     }
 
-    // @GetMapping("/{role}")
-    // public ResponseEntity<?> getPaginatedAkun(
-    //     @PathVariable String role,
-    //     @RequestParam int perpage,
-    //     @RequestParam int page,
-    //     Authentication auth
-    // ) {
-        
-    // }
-
     @GetMapping("/{publicId}")
     public ResponseEntity<?> getDetailAkun(@PathVariable String publicId, Authentication auth) {
         boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT"});
@@ -84,27 +71,11 @@ public class AkunController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PatchMapping("/{publicId}/password")
-    public ResponseEntity<?> updatePassword(
-        @PathVariable String publicId,
-        @RequestBody AkunUpdatePasswordRequest request
-    ) {
-        try {
-            boolean updated = akunService.updatePassword(publicId, request.getNewPassword());
-            if (updated) {
-                return ResponseEntity.ok(null);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
-
+    // used - root, admin, owner
     @PatchMapping("/password")
-    public ResponseEntity<?> updatePasswordByOwner(
+    public ResponseEntity<?> updatePassword(
         Authentication auth,
-        @RequestBody @Valid AkunUpdatePasswordByOwnerRequest request
+        @RequestBody @Valid AkunUpdatePasswordRequest request
     ) {
         boolean canAccess = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"}) 
             || accessControlService.ownerCanAccess(auth, request.getPublicId());
@@ -117,7 +88,7 @@ public class AkunController {
         }
 
         try {
-            akunService.updatePasswordByOwner(request);
+            akunService.updatePassword(request);
             return ResponseEntity.status(204).build();
         } catch (Exception e) {
             if (e.getMessage().equals("404")) {

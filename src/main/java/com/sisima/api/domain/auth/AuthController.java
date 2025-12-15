@@ -26,6 +26,7 @@ public class AuthController {
 
     private final AuthService authService;
 
+    // used - guest
     @PostMapping
     public ResponseEntity<AuthResponse> login(
             @RequestBody @Valid AuthRequest request
@@ -35,7 +36,7 @@ public class AuthController {
         if (token == null) {
             return 
                 ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
+                    .status(401)
                     .body(new AuthResponse("invalid"));
         }
 

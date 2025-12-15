@@ -25,6 +25,7 @@ public class GuruController {
     private final AccessControlService accessControlService;
     private final GuruService guruService;
 
+    // used - root, admin
     @GetMapping
     public ResponseEntity<?> getAllGuruPaginated(
         Authentication auth,
@@ -33,7 +34,7 @@ public class GuruController {
     ) {
         boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"});
         if (!ra) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(403).body(null);
         }
 
         Page<GuruGetPaginatedResponse> guru = guruService.getAllGuruPaginated(page, size);
@@ -41,6 +42,7 @@ public class GuruController {
         return ResponseEntity.ok(guru);
     }
 
+    // used - root, admin
     @PostMapping
     public ResponseEntity<?> addGuru(
         Authentication auth,
@@ -48,11 +50,11 @@ public class GuruController {
     ) {
         boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"});
         if (!ra) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.status(403).body(null);
         }
 
         GuruAddResponse response = guruService.addGuru(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(201).body(response);
     }
     
 }

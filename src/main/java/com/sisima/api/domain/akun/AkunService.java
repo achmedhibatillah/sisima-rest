@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.github.f4b6a3.ulid.UlidCreator;
 import com.sisima.api.domain.akun.model.AkunAddResponse;
 import com.sisima.api.domain.akun.model.AkunGetResponse;
-import com.sisima.api.domain.akun.model.AkunUpdatePasswordByOwnerRequest;
+import com.sisima.api.domain.akun.model.AkunUpdatePasswordRequest;
 import com.sisima.api.domain.akun.model.AkunAddRequest;
 import com.sisima.api.enums.AkunRoleEnum;
 
@@ -71,18 +71,7 @@ public class AkunService {
         );
     }
 
-    public boolean updatePassword(String publicId, String password) {
-        Optional<Akun> akunOpt = akunRepository.findDetailByPublicId(publicId);
-        if (akunOpt.isPresent()) {
-            Akun akun = akunOpt.get();
-            akun.setPassword(passwordEncoder.encode(password));
-            akunRepository.save(akun);
-            return true;
-        }
-        return false;
-    }
-
-    public void updatePasswordByOwner(AkunUpdatePasswordByOwnerRequest request) {
+    public void updatePassword(AkunUpdatePasswordRequest request) {
 
         Akun akun = akunRepository.findDetailByPublicId(request.getPublicId())
             .orElseThrow(() -> new RuntimeException("404"));

@@ -2,7 +2,6 @@ package com.sisima.api.domain.akun.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
