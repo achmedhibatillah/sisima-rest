@@ -48,7 +48,7 @@ create table guru (
     tempat_lahir varchar(30),
     tanggal_lahir date,
     alamat varchar(255),
-    masuk date,
+    masuk smallint,
     foto int,
     file_ktp int,
     file_npwp int,

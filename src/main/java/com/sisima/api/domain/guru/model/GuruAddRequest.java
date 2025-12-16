@@ -14,12 +14,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GuruAddRequest {
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Tidak boleh kosong.")
+    @Email(message = "Email tidak valid.")
     private String email;
 
-    @NotBlank
-    @Size(min = 6, max = 20)
+    @NotBlank(message = "Tidak boleh kosong.")
+    @Size(min = 6, max = 20, message = "Panjang harus 6-20 karakter.")
     private String password;
     
 }

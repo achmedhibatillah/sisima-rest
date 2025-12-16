@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,7 +85,7 @@ public class AkunController {
         }
 
         if (request.getOldPassword().equals(request.getNewPassword())) {
-            return ResponseEntity.status(400).body("Password lama dan baru tidak boleh sama.");
+            return ResponseEntity.status(400).body(Map.of("general", "Password lama dan baru tidak boleh sama."));
         }
 
         try {
@@ -94,7 +95,7 @@ public class AkunController {
             if (e.getMessage().equals("404")) {
                 return ResponseEntity.status(404).body("Akun tidak ditemukan.");
             } else if (e.getMessage().equals("400")) {
-                return ResponseEntity.status(400).body("Password lama salah.");
+                return ResponseEntity.status(400).body(Map.of("general", "Password lama salah."));
             }
             return ResponseEntity.status(500).build();
         }

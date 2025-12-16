@@ -21,7 +21,7 @@ public class AkunUpdatePasswordRequest {
 
     @JsonProperty("new_password")
     @NotBlank
-    @Size(min = 6, max = 20)
+    @Size(min = 6, max = 20, message = "Panjang harus di antara 6 - 20 karakter.")
     private String newPassword;
 
 }

@@ -55,7 +55,7 @@ public class Guru {
     private String alamat;
 
     @Column(name = "masuk")
-    private LocalDate masuk;
+    private int masuk;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "foto", referencedColumnName = "id")
@@ -71,5 +71,5 @@ public class Guru {
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "akun_id", nullable = false)
-    private Akun akun;
+    private Akun akun; 
 }
