@@ -46,7 +46,7 @@ public class GuruController {
     ) {
         boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"});
         if (!ra) {
-            return ResponseEntity.status(403).body(null);
+            return ResponseEntity.status(401).build();
         }
 
         Page<GuruGetPaginatedResponse> guru = guruService.getAllGuruPaginated(page, size);
@@ -70,7 +70,7 @@ public class GuruController {
             accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"})
             || accessControlService.ownerCanAccess(auth, guru.getAkun().getPublicId());
         if (!canAccess) {
-            return ResponseEntity.status(403).build();
+            return ResponseEntity.status(401).build();
         }
 
         GuruGetDetailResponse response = guruService.getDetailGuru(section, guru);
@@ -91,7 +91,7 @@ public class GuruController {
 
         boolean ra = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"});
         if (!ra) {
-            return ResponseEntity.status(403).body(null);
+            return ResponseEntity.status(401).build();
         }
 
         GuruAddResponse response = guruService.addGuru(request);
@@ -113,7 +113,7 @@ public class GuruController {
         boolean canAccess = accessControlService.rolesCanAccess(auth, new String[]{"ROOT", "ADMIN"}) 
             || accessControlService.ownerCanAccess(auth, guru.getAkun().getPublicId());
         if (!canAccess) {
-            return ResponseEntity.status(403).build();
+            return ResponseEntity.status(401).build();
         }
 
         try {

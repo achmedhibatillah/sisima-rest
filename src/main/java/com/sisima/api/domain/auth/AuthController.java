@@ -21,13 +21,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
 
     // used - guest
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
             @RequestBody @Valid AuthRequest request
     ) {

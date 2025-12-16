@@ -17,23 +17,6 @@ public class AccessControlService {
     private static final Logger log =
         LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
-    // public boolean rolesCanAccess(Authentication auth, String[] allowedRoles) {
-    //     if (auth == null || !auth.isAuthenticated()) return false;
-
-    //     String currentRole = 
-    //         auth
-    //             .getAuthorities()
-    //             .stream()
-    //             .map(GrantedAuthority::getAuthority)
-    //             .findFirst()
-    //             .orElse("");
-
-    //     return 
-    //         Arrays
-    //             .stream(allowedRoles)
-    //             .anyMatch(r -> currentRole.equals("ROLE_" + r.toUpperCase()));
-    // }
-
     public boolean rolesCanAccess(Authentication auth, String[] allowedRoles) {
         if (auth == null || !auth.isAuthenticated()) return false;
 
