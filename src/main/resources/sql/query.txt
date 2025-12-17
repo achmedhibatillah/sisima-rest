@@ -18,6 +18,17 @@ create table akun (
     deleted_at timestamp
 );
 
+create table refresh_token (
+    id serial primary key,
+    owner_public_id char(26) not null,
+    token_hash varchar(255) not null,
+    expires_at timestamp not null,
+    revoked boolean default false,
+    created_at timestamp default now(),
+
+    foreign key (owner_public_id) references akun(public_id)
+);
+
 -- TABLE: STORAGE
 -- security only can: PUBL, AUTH, ADMN, OWNR
 -- create type enum_file_type as enum ('photo', 'sound', 'video', 'pdf', 'spreadsheet', 'docx', 'other');

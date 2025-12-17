@@ -10,6 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.sisima.api.filter.JwtAuthenticationFilter;
+import com.sisima.api.security.AllowPermitEndpointConst;
 
 import lombok.AllArgsConstructor;
 
@@ -26,10 +27,15 @@ public class SecurityConfig {
             .formLogin(login -> login.disable())
             .csrf(csrf -> csrf.disable())
             
+            // .authorizeHttpRequests(auth -> auth
+            //     .requestMatchers("/").permitAll()
+            //     .requestMatchers("/auth/**").permitAll()
+            //     .requestMatchers("/storage/public/**").permitAll()
+            //     .anyRequest().authenticated() 
+            // )
+
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/storage/public/**").permitAll()
+                .requestMatchers(AllowPermitEndpointConst.PUBLIC).permitAll()
                 .anyRequest().authenticated()
             )
 

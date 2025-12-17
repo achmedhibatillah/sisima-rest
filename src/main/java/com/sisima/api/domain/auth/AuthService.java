@@ -4,15 +4,16 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import com.sisima.api.config.JwtUtil;
 import com.sisima.api.domain.akun.Akun;
 import com.sisima.api.domain.akun.AkunRepository;
 import com.sisima.api.domain.auth.model.AuthRequest;
 import com.sisima.api.domain.auth.model.AuthResponse;
+import com.sisima.api.domain.auth.model.LoginResult;
 
 import lombok.AllArgsConstructor;
 
@@ -42,17 +43,17 @@ public class AuthService {
         return new AuthResponse("success");
     }
 
-    public String authenticateAndGetToken(AuthRequest request) {
-        Akun akun = akunRepository.findDetailByEmail(request.getEmail())
-                .orElse(null);
+    // public String authenticateAndGetToken(AuthRequest request) {
+    //     Akun akun = akunRepository.findDetailByEmail(request.getEmail())
+    //             .orElse(null);
 
-        if (akun == null) return null;
+    //     if (akun == null) return null;
 
-        if (!passwordEncoder.matches(request.getPassword(), akun.getPassword()))
-            return null;
+    //     if (!passwordEncoder.matches(request.getPassword(), akun.getPassword()))
+    //         return null;
 
-        return jwtUtil.generateToken(akun);
-    }
+    //     return jwtUtil.generateToken(akun);
+    // }
 
     public LoginResult login(AuthRequest request) {
         Akun akun = akunRepository.findDetailByEmail(request.getEmail())
@@ -71,7 +72,8 @@ public class AuthService {
             DigestUtils.sha256Hex(refreshToken),
             akun.getPublicId(),
             Instant.now().plus(7, ChronoUnit.DAYS),
-            false
+            false,
+            null
         );
 
         refreshTokenRepository.save(entity);
@@ -89,7 +91,7 @@ public class AuthService {
         if (token == null || token.getExpiresAt().isBefore(Instant.now()))
             return null;
 
-        Akun akun = akunRepository.findDetailByPublicId(token.getUserPublicId())
+        Akun akun = akunRepository.findDetailByPublicId(token.getOwnerPublicId())
             .orElse(null);
 
         if (akun == null) return null;
